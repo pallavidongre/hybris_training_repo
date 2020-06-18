@@ -1,0 +1,3 @@
+UPDATE ManufactureDetails; company[unique = true]; country(isocode); yearsInMarket(); rating()
+                                ;  NANO       ; IN             ; 20               ; 4;
+

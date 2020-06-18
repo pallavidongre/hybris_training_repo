@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved.
+-->
+<items xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="items.xsd">
+
+    <collectiontypes>
+        <collectiontype code="GenderList" elementtype="Gender" autocreate="true" generate="true" type="list"/>
+        <collectiontype code="SwatchColorSet" elementtype="SwatchColorEnum" autocreate="true" generate="true"
+                        type="set"/>
+
+    </collectiontypes>
+
+    <enumtypes>
+        <enumtype generate="true" code="SwatchColorEnum" autocreate="true" dynamic="true">
+            <value code="BLACK"/>
+            <value code="BLUE"/>
+            <value code="BROWN"/>
+            <value code="GREEN"/>
+            <value code="GREY"/>
+            <value code="ORANGE"/>
+            <value code="PINK"/>
+            <value code="PURPLE"/>
+            <value code="RED"/>
+            <value code="SILVER"/>
+            <value code="WHITE"/>
+            <value code="YELLOW"/>
+        </enumtype>
+    </enumtypes>
+    
+<!--    creating many to many relations for manufacturer detils model -->
+    <relations>
+        <relation code="MDetailsRelation" autocreate="true" localized="false">
+            <deployment table="MDetailsRelation" typecode="11002"/>
+            <sourceElement type="Product" qualifier="productDetails" cardinality="many" collectiontype="list">
+                <modifiers read="true" write="true" search="true" optional="true"/>
+            </sourceElement>
+            <targetElement type="ManufactureDetails" qualifier="manufactureDetails" cardinality="many" collectiontype="list">
+                <modifiers read="true" write="true" search="true" optional="true"/>
+            </targetElement>
+        </relation>
+        <relation code="CustomPriceRelation" localized="false" autocreate="true">
+            <deployment table="CustomPriceRelation" typecode="11003"/>
+            <sourceElement  qualifier="userGroup" type="UserGroup" cardinality="many" collectiontype="list">
+                <modifiers write="true" read="true" search="true" optional="true"/>
+            </sourceElement>
+            <targetElement qualifier="solrFacetSearchConfig" type="SolrFacetSearchConfig" cardinality="many" collectiontype="list">
+                <modifiers read="true" write="false" optional="true"/>
+            </targetElement>
+        </relation>
+    </relations>
+
+
+    <itemtypes>
+
+        <!-- Add your item definitions here -->
+        <itemtype code="Product" generate="false" autocreate="false">
+            <attributes>
+                <attribute qualifier="customSEO" type="java.lang.String">
+                    <persistence type="property" />
+                        <modifiers initial="false" optional="true" search="true" ></modifiers>
+
+                    </attribute>
+                </attributes>
+            </itemtype>
+
+        <itemtype code="Product" autocreate="false" generate="false">
+            <attributes>
+                <attribute qualifier="customSEOKeyword" type="java.lang.String">
+                    <modifiers read="true" write="true" search="true"
+                               optional="true" />
+                    <persistence type="property" />
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="Customer" generate="false" autocreate="false">
+            <attributes>
+                <attribute qualifier="newCustomer" type="java.lang.Boolean"  >
+                <persistence type="property" />
+                <modifiers initial="false" optional="true" ></modifiers>
+                    <defaultvalue >java.lang.Boolean.FALSE </defaultvalue>
+                </attribute>
+                <attribute qualifier="isBusinessUser" type="java.lang.Boolean">
+                <modifiers read="true" write="true" initial="true" optional="false"/>
+                <persistence type="property" />
+                </attribute>
+            </attributes>
+        </itemtype>
+        <itemtype code="Address" generate="false" autocreate="false">
+        <attributes>
+            <attribute qualifier="vatNumber" type="java.lang.String"  >
+                <persistence type="property" />
+                <modifiers read="true" write="true" optional="true"/>
+            </attribute>
+        </attributes>
+    </itemtype>
+
+
+        <itemtype code="ProductRegistrationRemovalCronJob" extends="CronJob" jaloclass="com.nendrasys.core.productRegistrationCronJob.ProductRegistrationCronJob"
+                  autocreate="true" generate="true">
+        </itemtype>
+        <!-- TypeGroups are for structure of this file only -->
+        <!-- Product Rgistration which contains attributes like company name, product id , quantity needed -->
+        <itemtype code="ProductRegistration"
+                  autocreate="true" generate="true">
+
+
+
+            <description>ProductRegistration type that contains additional attribute describing comapany name,quantity needed, product id .
+            </description>
+            <deployment table="ProductRegistration" typecode="11010"/>
+            <attributes>
+                <attribute qualifier="companyName" type="java.lang.String"  generate="true" autocreate="true"  >
+
+                    <modifiers unique="true"/>
+                    <persistence type="property"/>
+                </attribute>
+                <attribute qualifier="productId" generate="true" autocreate="true" type="java.lang.String">
+                    <modifiers unique="true" />
+                    <persistence type="property"/>
+                    <description>id of the product</description>
+                </attribute>
+                <attribute qualifier="quantityNeeded" generate="true" autocreate="true" type="java.lang.Integer">
+                    <persistence type="property"/>
+                    <description>quantity of the product</description>
+                </attribute>
+            </attributes>
+        </itemtype>
+
+        <itemtype code="LatestProductCmsComponent" extends="SimpleCMSComponent" abstract="false" autocreate="true"
+                    jaloclass="com.nendrasys.core.jalo.LatestProductCmsComponent">
+            <attributes>
+                <attribute qualifier="noOfdaystoConsiderNewCustomer" type="java.lang.Integer" >
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+        <itemtype code="NewCustomerCronJob" extends="CronJob" abstract="false" autocreate="true"
+                  jaloclass="com.nendrasys.core.jalo.NewCustomerCronJob">
+            <attributes>
+                <attribute qualifier="noOfDaysToBeConsidered" type="java.lang.Integer">
+                    <persistence type="property"/>
+                </attribute>
+            </attributes>
+        </itemtype>
+        <typegroup name="Apparel">
+            <itemtype code="ApparelProduct" extends="Product"
+                      autocreate="true" generate="true"
+                      jaloclass="com.nendrasys.core.jalo.ApparelProduct">
+                <description>Base apparel product extension that contains additional attributes.</description>
+                <attributes>
+                    <attribute qualifier="genders" type="GenderList">
+                        <description>List of genders that the ApparelProduct is designed for</description>
+                        <modifiers/>
+                        <persistence type="property"/>
+                    </attribute>
+                </attributes>
+            </itemtype>
+
+            <itemtype code="ApparelStyleVariantProduct" extends="VariantProduct"
+                      autocreate="true" generate="true"
+                      jaloclass="com.nendrasys.core.jalo.ApparelStyleVariantProduct">
+                <description>Apparel style variant type that contains additional attribute describing variant style.
+                </description>
+                <attributes>
+                    <attribute qualifier="style" type="localized:java.lang.String"
+                               metatype="VariantAttributeDescriptor">
+                        <description>Color/Pattern of the product.</description>
+                        <modifiers/>
+                        <persistence type="property"/>
+                    </attribute>
+
+                    <attribute qualifier="swatchColors" type="SwatchColorSet">
+                        <description>A normalized color mapping to a standardized front-end navigable name.
+                        </description>
+                        <modifiers/>
+                        <persistence type="property"/>
+                    </attribute>
+                </attributes>
+
+            </itemtype>
+
+<!--            <itemtype code="ProductRegistrationNavigationBarComponent" autocreate="false"-->
+<!--                      generate="true" extends="SimpleCMSComponent"-->
+<!--                      jaloclass="de.hybris.platform.acceleratorcms.jalo.components.NavigationBarComponent">-->
+<!--            <description>Deprecated since 6.2, please use NavigationComponent instead. It represents navigation bar component that contains cms navigation node. Nodes structure can be built in a hierarchical way.</description>-->
+<!--            <attributes>-->
+<!--                <attribute type="ProductRegistrationCMSLinkComponent" qualifier="link">-->
+<!--                    <persistence type="property" />-->
+<!--                    <defaultvalue >java.lang.Boolean.FALSE</defaultvalue>-->
+<!--                    <modifiers optional="false" />-->
+<!--                    <description>The cms link component that is attached to this bar component.</description>-->
+<!--                </attribute>-->
+<!--            </attributes>-->
+<!--            </itemtype>-->
+<!--            <itemtype code="CmsProductRegistrationRestriction" extends="AbstractRestriction"-->
+<!--                      jaloclass="de.hybris.platform.cms2.jalo.restrictions."-->
+<!--                      generate="true" singleton="false" jaloonly="false" metatype="RestrictionType"-->
+<!--                      autocreate="true"/>-->
+
+           <!--Restruction-->
+
+            <itemtype code="ProductRegistrationRestrition" jaloclass="de.hybris.platform.cms2.jalo.restrictions.ProductRegistrationRestrition" extends="AbstractRestriction"
+                      autocreate="true" generate="true">
+                <attributes>
+                <attribute qualifier="description" type="java.lang.String" redeclare="true">
+                    <persistence type="dynamic" attributeHandler="productRegistrationDynamicDescription" />
+                    <modifiers write="false" />
+                </attribute>
+                </attributes>
+
+
+            </itemtype>
+
+
+
+
+
+
+            <itemtype code="ApparelSizeVariantProduct" extends="ApparelStyleVariantProduct"
+                      autocreate="true" generate="true"
+                      jaloclass="com.nendrasys.core.jalo.ApparelSizeVariantProduct">
+                <description>Apparel size variant type that contains additional attribute describing variant size.
+                </description>
+                <attributes>
+                    <attribute qualifier="size" type="localized:java.lang.String"
+                               metatype="VariantAttributeDescriptor">
+                        <description>Size of the product.</description>
+                        <modifiers/>
+                        <persistence type="property"/>
+                    </attribute>
+                </attributes>
+            </itemtype>
+        </typegroup>
+
+        <typegroup name="Electronics">
+            <itemtype code="ElectronicsColorVariantProduct" extends="VariantProduct"
+                      autocreate="true" generate="true"
+                      jaloclass="com.nendrasys.core.jalo.ElectronicsColorVariantProduct">
+                <description>Electronics color variant type that contains additional attribute describing variant color.
+                </description>
+                <attributes>
+                    <attribute qualifier="color" type="localized:java.lang.String"
+                               metatype="VariantAttributeDescriptor">
+                        <description>Color of the product.</description>
+                        <modifiers/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="isNewProduct" generate="true" autocreate="true" type="java.lang.Boolean">
+                        <defaultvalue>java.lang.Boolean.FALSE</defaultvalue>
+                        <modifiers write="false" />
+                        <persistence type="dynamic" attributeHandler="isNewProductAttributeHandler" />
+                        <description> Dynamic attribute for the isNewProduct attribute</description>
+                    </attribute>
+
+                </attributes>
+            </itemtype>
+        </typegroup>
+
+
+
+<!--Manufacture Details typegroup-->
+        <typegroup name="ManufacturerDetails">
+            <itemtype code="ManufactureDetails" autocreate="true" generate="true">
+                <description>Manufacturer Detials class contains Manufacturer details like rating, country, company, years in market
+                </description>
+                <deployment table="ManufactureDetails" typecode="11001"/>
+                <attributes>
+                        <attribute qualifier="canBeSold" generate="true" autocreate="true" type="java.lang.Boolean">
+                            <modifiers read="true" write="true" initial="true" optional="false"/>
+                            <persistence type="property" />
+                        </attribute>
+
+                    <attribute qualifier="company" generate="true" autocreate="true" type="java.lang.String">
+                        <modifiers read="true" write="true" search="true" unique="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="country" generate="true" autocreate="true" type="Country">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="rating" generate="true" autocreate="true" type="java.lang.Integer">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="yearsInMarket" generate="true" autocreate="true" type="java.lang.Integer">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                </attributes>
+            </itemtype>
+
+            <itemtype code="AuditManufactureEntry" generate="true" autocreate="true">
+                <deployment table="AuditManufactureEntries" typecode="11008" />
+                <attributes>
+                    <attribute qualifier="company" generate="true" autocreate="true" type="java.lang.String">
+                        <modifiers read="true" write="true" search="true" unique="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="country" generate="true" autocreate="true" type="Country">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="rating" generate="true" autocreate="true" type="java.lang.Integer">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                    <attribute qualifier="yearsInMarket" generate="true" autocreate="true" type="java.lang.Integer">
+                        <modifiers read="true" write="true" search="true"/>
+                        <persistence type="property"/>
+                    </attribute>
+                </attributes>
+            </itemtype>
+
+        </typegroup>
+    
+
+    </itemtypes>
+</items>

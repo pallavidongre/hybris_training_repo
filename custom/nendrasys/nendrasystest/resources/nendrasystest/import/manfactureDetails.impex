@@ -1,0 +1,21 @@
+INSERT_UPDATE ManufactureDetails; company[unique=true]; country(isocode); rating; yearsInMarket
+;pineapple; AS; 5; 1990
+;sumsung; CN; 4; 1996
+;oppo; DK; 5; 1990
+;Heinrich's Beverages ;ZM; 5; 1990
+;Dulux Zambia;ZM; 2; 1987
+;Kumar Industries;TW; 4; 1991
+;Royal Agro Tech Industries;TW; 1; 1997
+;Star Manufacturing Co. LTD;TH; 3; 1992
+;Thai Thian Electronic Company LTD;TH; 3; 1987
+;Airbus	;AW; 5; 1991
+;ING Group;AW; 3; 1993
+;Luxo;BV; 2; 1992
+;Thin Film Electronics ASA;BV; 3; 1982
+;Reliance Industries;IN; 4; 1991
+;Indian Oil Corporation;IN; 3; 1988
+;Tata Motors;IN; 5; 1989
+;Bharat Petroleum;IN; 5; 1970
+;Axa;MF; 4; 1988
+;Crédit Agricole;MF; 5; 1999
+;xyx;IN;2;2015
