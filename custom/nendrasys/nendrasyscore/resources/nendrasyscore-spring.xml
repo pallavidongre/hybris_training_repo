@@ -672,25 +672,6 @@
 
     <bean id="customCaptureMockCommand" class="com.nendrasys.core.payment.command.CustomCaptureMockCommand"></bean>
 
-    <bean id="mockupCommandFactory" class="de.hybris.platform.payment.commands.factory.impl.DefaultCommandFactoryImpl" >
-        <property name="commands">
-           <map merge="true">
-                <entry>
-                    <key>
-                        <value type="java.lang.Class">com.nendrasys.core.payment.command.CustomCaptureMockCommand</value>
-                    </key>
-                    <bean id="captureMockCommand1" class="com.nendrasys.core.payment.command.CustomCaptureMockCommand"></bean>
-                </entry>
-                <entry>
-                    <key>
-                        <value type="java.lang.Class">de.hybris.platform.payment.commands.CaptureCommand</value>
-                    </key>
-                    <bean class="com.nendrasys.core.payment.command.CustomCaptureMockCommand"></bean>
-                </entry>
-           </map>
-        </property>
-    </bean>
-
     <!--<bean name="mockupCommandFactory" class="de.hybris.platform.payment.commands.factory.impl.DefaultCommandFactoryImpl" >
         <property name="paymentProvider" value="Mockup"/>
         <property name="commands">
