@@ -1,0 +1,9 @@
+#Ant properties
+#Mon Sep 09 10:47:39 CEST 2019
+version.api=1905
+vendor=hybris
+group.id=de.hybris.platform
+builddate=20190909 1040
+releasedate=20190909 1040
+version=1905.3
+module.name=platform-module
